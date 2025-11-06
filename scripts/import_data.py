@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 import os
 
-DB_PATH = r"C:\Users\shadiya\Downloads\automated_reminders\automated_reminders\database\reminders.db"
+DB_PATH = r"C:\Users\shadiya\Downloads\automated_reminders\automated_reminders\reminders.db"
 DATA_DIR = r"C:\Users\shadiya\Downloads\automated_reminders\automated_reminders\data"
 
 #DB_PATH = os.path.join("..", "database", "reminders.db")

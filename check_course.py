@@ -21,17 +21,6 @@ CREATE TABLE IF NOT EXISTS courses (
 """)
 
 cursor.execute("""
-CREATE TABLE IF NOT EXISTS students (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT,
-    email TEXT,
-    discord_id TEXT,
-    course_id INTEGER,
-    FOREIGN KEY(course_id) REFERENCES courses(id)
-)
-""")
-
-cursor.execute("""
 CREATE TABLE IF NOT EXISTS reminder_status (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     student_id INTEGER,
@@ -57,6 +46,39 @@ courses = [
 
 cursor.executemany("INSERT INTO courses (course_name, mode, batch) VALUES (?, ?, ?)", courses)
 
+conn.commit()
+
+# Drop the students table if it exists
+cursor.execute("DROP TABLE IF EXISTS students")
+
+# ===== CREATE TABLES =====
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS students (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT,
+    email TEXT,
+    discord_id TEXT,
+    course_id INTEGER,
+    FOREIGN KEY(course_id) REFERENCES courses(id)
+)
+""")
+
+# Dummy data for students
+students = [
+    ("Alice Johnson", "alice.johnson@example.com", "Alice#1234", 1),
+    ("Bob Smith", "bob.smith@example.com", "Bob#5678", 2),
+    ("Charlie Brown", "charlie.brown@example.com", "Charlie#9012", 3),
+    ("Daisy Lee", "daisy.lee@example.com", "Daisy#3456", 4),
+    ("Ethan White", "ethan.white@example.com", "Ethan#7890", 5)
+]
+
+# Insert data into the students table
+cursor.executemany("""
+    INSERT INTO students (name, email, discord_id, course_id) 
+    VALUES (?, ?, ?, ?)
+""", students)
+
+# Commit and close
 conn.commit()
 conn.close()
 

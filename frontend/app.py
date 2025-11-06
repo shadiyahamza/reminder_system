@@ -88,9 +88,9 @@ def send_email(to_email, subject, body):
 # FRONTEND
 # -------------------------------
 st.title("📌 Automated Reminder App")
-menu = ["Add Reminder", "View Reminders"]
-choice = st.sidebar.selectbox("Menu", menu)
-
+menu = ["View Reminders", "View Students", "Add Reminder"]
+# choice = st.sidebar.radio("Menu", menu)
+choice = st.selectbox("Menu", menu, index=0)
 if choice == "Add Reminder":
     st.subheader("Add a new reminder")
     title = st.text_input("Title")
@@ -112,7 +112,7 @@ elif choice == "View Reminders":
         cursor.execute("SELECT * FROM courses ORDER BY course_name ASC")
         courses = cursor.fetchall()
         courses = [course[1] for course in courses]  # Extract course names
-        
+
     if courses:
         selected_course = st.selectbox("Select a course", courses)
 
@@ -143,7 +143,18 @@ elif choice == "View Reminders":
             st.info(f"No reminders found for course: {selected_course}")
     else:
         st.info("No courses found in reminders.")
-
+elif choice == "View Students":
+    st.subheader("Enrolled Students")
+    with get_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute("SELECT id, name, email FROM students ORDER BY name ASC")
+        students = cursor.fetchall()
+        if students:
+            for student in students:
+                id_, name, email = student
+                st.markdown(f"**{name}** - {email}")
+        else:
+            st.info("No students enrolled yet.")
 
 # -------------------------------
 # OPTIONAL: Auto-send due emails
