@@ -109,9 +109,10 @@ elif choice == "View Reminders":
     # Fetch distinct courses from reminders (assuming 'title' represents course)
     with get_connection() as conn:
         cursor = conn.cursor()
-        cursor.execute("SELECT DISTINCT title FROM reminders")
-        courses = [row[0] for row in cursor.fetchall()]
-
+        cursor.execute("SELECT * FROM courses ORDER BY course_name ASC")
+        courses = cursor.fetchall()
+        courses = [course[1] for course in courses]  # Extract course names
+        
     if courses:
         selected_course = st.selectbox("Select a course", courses)
 
